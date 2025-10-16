@@ -1,153 +1,107 @@
-# Simulador de Login de Microsoft - Campaña de Concientización
+# 🔐 Microsoft Login Awareness - Security Awareness Campaign
 
-Este proyecto es una **simulación educativa** de una página de inicio de sesión de Microsoft/Outlook, diseñada para campañas de concientización sobre seguridad cibernética y phishing dentro de empresas.
+Educational phishing simulation designed to train employees in identifying fraudulent login pages.
 
-## ⚠️ AVISO IMPORTANTE
+## ⚠️ LEGAL NOTICE
 
-Este sitio web está diseñado **ÚNICAMENTE CON FINES EDUCATIVOS** para entrenar a empleados en la identificación de sitios de phishing. **NO** debe usarse con intenciones maliciosas.
+This project is designed **EXCLUSIVELY FOR EDUCATIONAL PURPOSES** within authorized security awareness campaigns. Any malicious use is strictly prohibited.
 
-## 🎯 Propósito
+## 🎯 Purpose
 
-- Educar a los empleados sobre técnicas de phishing
-- Enseñar a identificar sitios web fraudulentos
-- Crear conciencia sobre la seguridad de credenciales
-- Promover buenas prácticas de ciberseguridad
+Cybersecurity awareness training platform that simulates Microsoft/Outlook login pages to:
+- Train employees to identify phishing attempts
+- Demonstrate common social engineering tactics  
+- Promote security best practices
+- Reduce credential theft risks
 
-## 🚀 Instalación Local
+## 🚀 Quick Start
 
-### Opción 1: Servidor HTTP Simple (Python)
+### Deploy to Production
 
-```bash
-# Si tienes Python 3 instalado
-python3 -m http.server 8000
+**Recommended:** Use Netlify or Vercel for instant HTTPS deployment
 
-# Si tienes Python 2
-python -m SimpleHTTPServer 8000
-```
+1. Fork this repository
+2. Connect to [Netlify](https://netlify.com) or [Vercel](https://vercel.com)
+3. Deploy with one click
+4. Your awareness campaign is live
 
-Luego abre tu navegador en: `http://localhost:8000`
-
-### Opción 2: Servidor HTTP Simple (Node.js)
+### Local Development
 
 ```bash
-# Instalar http-server globalmente
-npm install -g http-server
+# Python 3
+python3 -m http.server 8080
 
-# Ejecutar el servidor
-http-server -p 8000
+# Node.js (with http-server)
+npx http-server -p 8080
 ```
 
-### Opción 3: Live Server (VS Code)
+Open browser at `http://localhost:8080`
 
-1. Instala la extensión "Live Server" en VS Code
-2. Haz clic derecho en `index.html`
-3. Selecciona "Open with Live Server"
-
-## 🌐 Despliegue en Hosting Gratuito
-
-### Opción 1: GitHub Pages
-
-1. Crea un repositorio en GitHub
-2. Sube los archivos del proyecto
-3. Ve a Settings > Pages
-4. Selecciona la rama main como fuente
-5. Tu sitio estará disponible en: `https://tu-usuario.github.io/nombre-repo/`
-
-### Opción 2: Netlify
-
-1. Ve a [netlify.com](https://www.netlify.com)
-2. Arrastra la carpeta del proyecto
-3. Tu sitio estará en línea en segundos
-4. URL generada automáticamente (puedes personalizarla)
-
-### Opción 3: Vercel
-
-1. Instala Vercel CLI: `npm install -g vercel`
-2. Ejecuta: `vercel`
-3. Sigue las instrucciones
-4. Tu sitio estará disponible con HTTPS
-
-### Opción 4: Render
-
-1. Ve a [render.com](https://render.com)
-2. Crea un nuevo "Static Site"
-3. Conecta tu repositorio de GitHub o sube los archivos
-4. Despliega automáticamente
-
-## 📁 Estructura del Proyecto
+## 📁 Project Structure
 
 ```
-Login/
-├── index.html      # Página principal con los 3 pasos
-├── styles.css      # Estilos que imitan el diseño de Microsoft
-├── script.js       # Lógica de interacción y validación
-└── README.md       # Este archivo
+├── index.html              # Main login page
+├── reset-password.html     # Password reset flow
+├── admin.html             # Admin dashboard
+├── styles.css             # Login page styles
+├── styles-reset.css       # Reset page styles  
+├── script.js              # Login capture logic
+├── script-reset.js        # Reset capture logic
+└── README.md              # Documentation
 ```
 
-## 🎨 Características
+## ✨ Features
 
-- ✅ Diseño idéntico a Microsoft/Outlook 365
-- ✅ Interfaz responsive (móvil y escritorio)
-- ✅ Validación de formularios
-- ✅ Animaciones suaves entre pasos
-- ✅ Mensaje educativo al final
-- ✅ Sin dependencias externas (JavaScript vanilla)
+- 🎨 Pixel-perfect Microsoft design replica
+- 📱 Fully responsive (mobile/desktop)
+- 🔒 Credential capture with email notifications
+- 📊 Admin dashboard with export functionality
+- ⚡ Zero dependencies (vanilla JavaScript)
+- 🌐 Multi-language support (EN/ES)
+- 🔄 Password reset flow simulation
+- 📧 Integration with Web3Forms & Formspree
 
-## 🔐 Funcionalidad
+## 🔐 How It Works
 
-1. **Paso 1**: Usuario ingresa su correo electrónico
-2. **Paso 2**: Usuario ingresa su contraseña
-3. **Paso 3**: Se muestra un mensaje educativo explicando:
-   - Que fue una simulación
-   - Señales de advertencia de phishing
-   - Consejos de seguridad
+### Login Simulation (`index.html`)
+1. User enters email → Validation
+2. User enters password → Capture
+3. Data stored locally + email notification sent
+4. Educational message displayed
+5. Optional redirect to real Microsoft login
 
-## 🛡️ Señales de Advertencia Enseñadas
+### Password Reset (`reset-password.html`)
+4-step flow mimicking Microsoft's password recovery process with capture at each step.
 
-- URL sospechosa (no es microsoft.com)
-- Falta de certificado HTTPS válido
-- Enlaces desde correos no solicitados
-- Solicitudes urgentes o amenazantes
-- Errores ortográficos o gramaticales
+### Admin Panel (`admin.html`)
+- View all captured credentials
+- Filter by type (login/reset)
+- Export to CSV
+- Clear data
 
-## 📊 Uso en Campañas de Concientización
+## 🚨 Security Education Points
 
-### Sugerencias de Implementación:
+The campaign teaches employees to identify:
+- ✅ Suspicious URLs (not microsoft.com)
+- ✅ Missing HTTPS certificates
+- ✅ Unsolicited email links
+- ✅ Urgent/threatening language
+- ✅ Grammar/spelling errors
 
-1. **Email de prueba**: Envía un correo simulado a empleados con un enlace al sitio
-2. **Métricas**: Registra quién hace clic y quién ingresa credenciales
-3. **Seguimiento**: Envía capacitación adicional a quienes caen en la trampa
-4. **Sin castigos**: Enfócate en educación, no en sanciones
+## 📊 Campaign Implementation
 
-### Personalización:
+### Best Practices:
+1. **Authorization**: Get management approval
+2. **Notification**: Send simulated phishing email
+3. **Tracking**: Monitor captures in admin panel
+4. **Follow-up**: Provide training to affected users
+5. **No punishment**: Focus on education
 
-Puedes modificar:
-- Textos en `index.html`
-- Colores y estilos en `styles.css`
-- Mensajes educativos
-- Agregar logo de tu empresa
-- Incluir contacto de IT/Seguridad
-
-## 🌍 Configuración de Dominio Personalizado
-
-### Opción 1: Dominio Gratuito con Subdominios
-
-Servicios como **Netlify** y **Vercel** te dan subdominios gratis:
-- `tu-campaña.netlify.app`
-- `tu-campaña.vercel.app`
-
-### Opción 2: Dominio Propio
-
-1. Compra un dominio (GoDaddy, Namecheap, etc.)
-2. Configura los DNS para apuntar a tu hosting:
-
-**Para Netlify:**
-```
-CNAME record: www → tu-sitio.netlify.app
-A record: @ → 75.2.60.5
-```
-
-**Para Vercel:**
+### Customization:
+- Update email in `script.js` (line with `Web3Forms`)
+- Modify educational messages
+- Add company branding
+- Customize redirect URLs
 ```
 CNAME record: www → cname.vercel-dns.com
 ```
@@ -193,10 +147,37 @@ Este es un proyecto educativo. Siéntete libre de:
 - Mejorar los mensajes educativos
 - Agregar métricas y reportes
 
-## 📧 Contacto
+## 📧 Configuration
 
-Para más información sobre campañas de concientización de seguridad, contacta a tu departamento de IT Security.
+### Email Notifications Setup
+
+1. Get a free API key from [Web3Forms](https://web3forms.com)
+2. Update `script.js` and `script-reset.js`:
+   ```javascript
+   const formData = new FormData();
+   formData.append('access_key', 'YOUR_API_KEY_HERE');
+   ```
+3. Set your notification email in the same files
+
+### Backup Service (Formspree)
+Get API key from [Formspree](https://formspree.io) and update the backup endpoint in scripts.
+
+## 📊 Admin Dashboard
+
+Access the admin panel at `/admin.html` to:
+- View all captures in real-time
+- Export data to CSV
+- Clear captured data
+- Filter by capture type
+
+## 🤝 Contributing
+
+Contributions are welcome! Please ensure any updates maintain the educational focus and ethical use of this tool.
+
+## 📄 License
+
+This project is for educational purposes only. Use responsibly and only with proper authorization.
 
 ---
 
-**Recuerda**: El objetivo es educar, no atrapar. La seguridad cibernética es responsabilidad de todos.
+**Remember**: The goal is education, not entrapment. Cybersecurity is everyone's responsibility.
