@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iniciar sesión en su cuenta de Microsoft</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><rect width='7' height='7' fill='%23f25022'/><rect x='8' width='7' height='7' fill='%237fba00'/><rect y='8' width='7' height='7' fill='%2300a4ef'/><rect x='8' y='8' width='7' height='7' fill='%23ffb900'/></svg>">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <svg class="microsoft-logo" width="108" height="24" viewBox="0 0 108 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect width="10.5" height="10.5" fill="#F25022"/>
+                <rect x="12" width="10.5" height="10.5" fill="#7FBA00"/>
+                <rect y="12" width="10.5" height="10.5" fill="#00A4EF"/>
+                <rect x="12" y="12" width="10.5" height="10.5" fill="#FFB900"/>
+                <text x="28" y="18" fill="#5E5E5E" style="font-family: 'Segoe UI', sans-serif; font-size: 17px; font-weight: 600;">Microsoft</text>
+            </svg>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <div class="login-card">
+                <div class="card-header">
+                    <img src="https://logincdn.msauth.net/16.000/content/images/microsoft_logo_ee5c8d9fb6248c938fd0dc19370e90bd.svg" alt="Microsoft" class="ms-logo">
+                </div>
+                
+                <div class="card-body" id="cardBody">
+                    <!-- Step 1: Email Input -->
+                    <div class="step" id="step1">
+                        <h1 class="title">Iniciar sesión</h1>
+                        <div class="subtitle-container">
+                            <p class="subtitle">a su cuenta de trabajo o escuela</p>
+                        </div>
+                        
+                        <div class="input-container">
+                            <input type="email" id="email" class="input-field" placeholder="Correo electrónico, teléfono o Skype" required>
+                            <div class="error-message" id="emailError"></div>
+                        </div>
+
+                        <div class="options">
+                            <a href="#" class="link-text">¿No puede obtener acceso a su cuenta?</a>
+                        </div>
+
+                        <div class="options">
+                            <a href="#" class="link-text">Opciones de inicio de sesión</a>
+                        </div>
+
+                        <div class="options">
+                            <span class="no-account-text">¿No tiene una cuenta? </span>
+                            <a href="#" class="link-text">Cree una.</a>
+                        </div>
+
+                        <div class="button-container">
+                            <button type="button" class="btn-primary" id="nextBtn">Siguiente</button>
+                        </div>
+                    </div>
+
+                    <!-- Step 2: Password Input -->
+                    <div class="step hidden" id="step2">
+                        <div class="back-button" id="backBtn">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                <path d="M15 18L9 12L15 6" stroke="#605E5C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </div>
+                        
+                        <div class="user-tile">
+                            <div class="user-email" id="userEmail"></div>
+                        </div>
+
+                        <h1 class="title">Escribir contraseña</h1>
+                        
+                        <div class="input-container">
+                            <input type="password" id="password" class="input-field" placeholder="Contraseña" required>
+                            <div class="error-message" id="passwordError"></div>
+                        </div>
+
+                        <div class="options">
+                            <a href="#" class="link-text">¿Olvidó su contraseña?</a>
+                        </div>
+
+                        <div class="checkbox-container">
+                            <input type="checkbox" id="keepSignedIn">
+                            <label for="keepSignedIn">Mantener la sesión iniciada</label>
+                        </div>
+
+                        <div class="button-container">
+                            <button type="button" class="btn-secondary" id="cancelBtn">Cancelar</button>
+                            <button type="button" class="btn-primary" id="signInBtn">Iniciar sesión</button>
+                        </div>
+                    </div>
+
+                    <!-- Step 3: Educational Message -->
+                    <div class="step hidden" id="step3">
+                        <div class="alert-container">
+                            <div class="alert-icon">
+                                <svg width="60" height="60" viewBox="0 0 60 60" fill="none">
+                                    <circle cx="30" cy="30" r="28" stroke="#D83B01" stroke-width="3"/>
+                                    <path d="M30 18V32" stroke="#D83B01" stroke-width="3" stroke-linecap="round"/>
+                                    <circle cx="30" cy="40" r="2" fill="#D83B01"/>
+                                </svg>
+                            </div>
+                            
+                            <h1 class="alert-title">⚠️ ¡ALTO! Esta es una prueba de seguridad</h1>
+                            
+                            <div class="alert-message">
+                                <p><strong>Esta NO es una página real de Microsoft.</strong></p>
+                                <p>Esta es una simulación de <strong>phishing</strong> creada con fines educativos como parte de nuestra campaña de concientización sobre seguridad.</p>
+                                
+                                <div class="warning-box">
+                                    <h3>🚨 Señales de advertencia que debiste notar:</h3>
+                                    <ul>
+                                        <li><strong>URL sospechosa:</strong> Esta página NO está alojada en microsoft.com o outlook.com</li>
+                                        <li><strong>Sin certificado válido:</strong> Verifica siempre el candado de seguridad en la barra de direcciones</li>
+                                        <li><strong>Enlaces desde correos no solicitados:</strong> Nunca hagas clic en enlaces de correos sospechosos</li>
+                                        <li><strong>Solicitudes urgentes:</strong> Los estafadores crean sensación de urgencia</li>
+                                    </ul>
+                                </div>
+
+                                <div class="tips-box">
+                                    <h3>✅ Consejos de seguridad:</h3>
+                                    <ul>
+                                        <li>Siempre verifica la URL antes de ingresar credenciales</li>
+                                        <li>Usa autenticación de dos factores (2FA) cuando esté disponible</li>
+                                        <li>No hagas clic en enlaces de correos sospechosos</li>
+                                        <li>Reporta correos sospechosos al departamento de IT</li>
+                                        <li>Mantén tus contraseñas seguras y únicas</li>
+                                    </ul>
+                                </div>
+
+                                <p class="contact-info">
+                                    <strong>¿Tienes dudas?</strong> Contacta al departamento de Seguridad IT de la empresa.
+                                </p>
+                            </div>
+
+                            <div class="button-container">
+                                <button type="button" class="btn-primary" id="resetBtn">Volver al inicio</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Footer -->
+                <div class="card-footer">
+                    <div class="footer-links">
+                        <a href="#">Términos de uso</a>
+                        <a href="#">Privacidad y cookies</a>
+                        <a href="#">...</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Page Footer -->
+        <div class="page-footer">
+            <div class="footer-content">
+                <a href="#" class="footer-link">⚙️ Opciones</a>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
